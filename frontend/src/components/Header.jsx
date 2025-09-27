@@ -101,7 +101,7 @@ const Header = ({ isAuthenticated, onLogin, onLogout, currentUser }) => {
                     خروج
                   </DropdownMenuItem>
                 </DropdownMenuContent>
-              </DropgroundMenu>
+              </DropdownMenu>
             ) : (
               <Button 
                 onClick={onLogin}
