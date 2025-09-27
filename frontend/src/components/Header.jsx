@@ -66,7 +66,7 @@ const Header = ({ isAuthenticated, onLogin, onLogout, currentUser }) => {
                   English
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropgroundMenu>
+            </DropdownMenu>
 
             {/* Theme Toggle */}
             <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
