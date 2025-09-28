@@ -82,7 +82,7 @@ async def get_crypto_chart(
 async def get_trading_pairs():
     """Get available trading pairs"""
     try:
-        service = await get_crypto_service()
+        service = await get_wallex_service()
         return await service.get_trading_pairs()
     except Exception as e:
         raise HTTPException(
