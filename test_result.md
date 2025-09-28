@@ -327,12 +327,13 @@ frontend:
 
 metadata:
   created_by: "testing_agent"
-  version: "1.0"
-  test_sequence: 1
+  version: "1.1"
+  test_sequence: 2
   run_ui: false
-  last_tested: "2025-09-28T17:21:00Z"
+  last_tested: "2025-01-27T15:30:00Z"
   test_environment: "production"
   backend_url: "https://crypto-exchange-copy-2.preview.emergentagent.com/api"
+  iranian_exchange_tested: true
 
 test_plan:
   current_focus: []
