@@ -36,9 +36,10 @@ class PhoneVerificationRequest(BaseModel):
         
         # Iranian mobile number patterns
         patterns = [
-            r'^09[0-9]{9}$',  # 09xxxxxxxxx
-            r'^(\+98|0098)9[0-9]{9}$',  # +989xxxxxxxxx or 00989xxxxxxxxx
-            r'^989[0-9]{9}$'  # 989xxxxxxxxx
+            r'^09[0-9]{9}$',  # 09xxxxxxxxx (11 digits)
+            r'^\+989[0-9]{9}$',  # +989xxxxxxxxx (13 digits)
+            r'^00989[0-9]{9}$',  # 00989xxxxxxxxx (14 digits)
+            r'^989[0-9]{9}$'  # 989xxxxxxxxx (12 digits)
         ]
         
         if not any(re.match(pattern, clean_number) for pattern in patterns):
