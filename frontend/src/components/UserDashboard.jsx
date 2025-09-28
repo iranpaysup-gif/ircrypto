@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { walletData, tradingHistory, stakingOptions, userLevels } from '../mock/data';
 import DepositModal from './DepositModal';
+import KYCModal from './KYCModal';
+import CardToCardPayment from './CardToCardPayment';
 import { 
   Wallet, 
   TrendingUp, 
@@ -17,8 +19,13 @@ import {
   History,
   Settings,
   Eye,
-  EyeOff
+  EyeOff,
+  AlertCircle,
+  CheckCircle,
+  Users
 } from 'lucide-react';
+import { kycAPI, walletAPI, handleApiError } from '../services/api';
+import { toast } from '../hooks/use-toast';
 
 const UserDashboard = ({ user }) => {
   const [showBalance, setShowBalance] = useState(true);
