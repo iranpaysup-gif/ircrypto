@@ -1,0 +1,83 @@
+<analysis>
+The AI engineer's work primarily focused on creating a pixel-perfect clone of wallex.ir. This involved an iterative process: first, building a frontend-only application with mock data, then setting up a basic FastAPI and MongoDB backend, and finally integrating the frontend with the backend using both mock and later, the real Wallex API. Key challenges included correctly parsing Wallex.ir's UI/UX, handling backend import issues, and addressing Wallex API rate limits and data structure inconsistencies. The trajectory shows a strong emphasis on adhering to design guidelines, environment setup rules, and careful use of tools. The process also involved detailed user guidance on project scope and API usage.
+</analysis>
+
+<product_requirements>
+The primary requirement is to create a pixel-perfect, fully functional clone of wallex.ir, an Iranian cryptocurrency exchange platform. This includes replicating its design, layout, colors, fonts, images, animations, and structure across all interactive elements, navigation, and page transitions. Responsive behavior must mirror the original site. The application needs to support a comprehensive user journey:
+1.  **User Registration**: Sign Up, Email Verification, Account Creation.
+2.  **KYC Process**: Document Upload, Verification, Admin Approval.
+3.  **First Deposit**: Wallet, Deposit (Card/Bank Transfer), Admin Approval, TMN (Toman) Added.
+4.  **First Trade**: Trading Page, Select Crypto (e.g., BTC), Enter Amount, Place Order, Crypto Received.
+5.  **Advanced Trading**: Margin Trading, Enable Leverage, Place Leveraged Order, Position Management.
+6.  **Staking**: Staking Page, Select Crypto, Set Amount, Start Staking, Rewards Earned.
+7.  **Withdrawal**: Wallet, Withdraw, Enter Amount, Confirm, Admin Approval, TMN Sent to Bank.
+The solution must integrate with the real Wallex API, specifically for price updates, with strict adherence to API usage limits (e.g., updating prices every 30 minutes). Visual details for the deposit process (Iranian card-to-card transactions) were also provided via images by the user.
+</product_requirements>
+
+<key_technical_concepts>
+- **React**: Frontend framework.
+- **FastAPI**: Backend framework.
+- **MongoDB**: Database for persistent storage.
+- **Shadcn UI**: Frontend component library.
+- **Tailwind CSS**: Utility-first CSS framework.
+- **Axios**: HTTP client for frontend API calls.
+- **React Router**: For client-side routing.
+- **Wallex API**: Third-party API for real-time crypto data, used for price updates.
+- **Websockets**: For potential real-time data integration with Wallex API.
+- **CORS**: Cross-Origin Resource Sharing for frontend-backend communication.
+- **Environment Variables**: For sensitive configurations like API keys and URLs.
+- **Supervisorctl**: For managing backend/frontend processes.
+</key_technical_concepts>
+
+<code_architecture>
+The application follows a Full-stack architecture with React (frontend), FastAPI (backend), and MongoDB (database).
+
+
+
+-   : Stores , , .
+-   : The main FastAPI application. Configures CORS, includes various API routers ( prefix), connects/disconnects to MongoDB, and now logs application shutdown.
+    -   **Changes**: Modified to include routes from  directory, added , and logging.
+-   : Defines Pydantic models for database schema (e.g., , , , , , , , ).
+-   : Handles MongoDB connection and common database operations.
+-   : Contains authentication logic (user registration, login, token generation, password hashing).
+-   : Originally fetched mock crypto data. Now integrates with  to fetch real market data, with fallback mechanisms.
+    -   **Changes**: Refactored to use  for fetching market data and price updates, including error handling and caching.
+-   : New file. Dedicated service for interacting with the external Wallex API, handling API key, base URL, market endpoints, and potentially WebSockets.
+-   : Separate files for different API route categories (e.g., , , , , ). Each module defines FastAPI endpoints related to its domain.
+    -   **Changes**: Updated imports to reflect new backend structure and services, especially  and  to utilize .
+-   : New directory created to resolve a  related to file uploads.
+-   : Main React component. Handles routing and global API calls (e.g., ).
+    -   **Changes**: Refactored to integrate , , , , , , , , and  components.
+-   : Stores mock data initially used for frontend development.
+-   : New file. Centralizes API calls from the frontend to the backend, using .
+-   : Various React components building the UI:
+    -   : Navigation, login/signup buttons.
+        -   **Changes**: Fixed typos and updated to use .
+    -   : Main landing section with animated logo and text.
+    -   : Displays key features.
+    -   : Displays a table of cryptocurrency prices.
+        -   **Changes**: Updated to fetch data from the actual backend API () and correctly map API response fields (e.g.,  instead of ).
+    -   : Handles user authentication (login/register).
+    -   , : Placeholder components for future functionality.
+-   , , : Styles and Tailwind CSS configuration.
+    -   **Changes**: Added CSS for triangle animation to .
+-   : Documents API contracts, mocked data, backend implementation plans, and frontend-backend integration.
+-    and : Manage Python and Node.js dependencies respectively.
+    -   **Changes**:  updated to include usage: websockets [--version | <uri>].
+</code_architecture>
+
+<pending_tasks>
+- Integrate the Wallex API for all specified functionalities (User Registration, KYC, Deposit, Trade, Staking, Withdrawal), adhering strictly to the user's scenario and the 30-minute price update frequency.
+- Implement the visual details for the deposit process, particularly the Iranian card-to-card transactions, based on the user-provided images.
+- Fully develop the ,  and other feature-specific components on the frontend.
+- Implement backend services and routes for KYC, Wallet (deposit/withdrawal), Trading, and Staking flows.
+- Implement email verification and admin approval workflows.
+</pending_tasks>
+
+<current_work>
+Immediately before this summary request, the AI engineer was addressing critical feedback regarding excessive Wallex API calls, which were causing connection timeouts and potential blocking. The user explicitly reiterated that the Wallex API should be used *only* for updating prices and at a reduced frequency (every 30 minutes), providing a new API key for this purpose. The AI engineer has acknowledged this and is in the process of rectifying the API usage strategy within the  to comply with the new frequency. Additionally, the user provided several images detailing the Iranian card-to-card deposit process, which the AI engineer needs to examine and integrate into the application's design and functionality. The backend is currently experiencing timeout errors when trying to fetch Wallex API markets, indicating that the API call frequency issue is ongoing.
+</current_work>
+
+<optional_next_step>
+Adjust the  to limit Wallex API calls for price updates to every 30 minutes and begin incorporating visual/functional details from the provided deposit images.
+</optional_next_step>

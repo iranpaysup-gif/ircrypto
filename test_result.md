@@ -317,7 +317,7 @@ metadata:
   run_ui: false
   last_tested: "2025-09-28T17:21:00Z"
   test_environment: "production"
-  backend_url: "https://wallex-replica.preview.emergentagent.com/api"
+  backend_url: "https://crypto-exchange-copy-2.preview.emergentagent.com/api"
 
 test_plan:
   current_focus: []

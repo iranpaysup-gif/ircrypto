@@ -12,7 +12,7 @@ from datetime import datetime
 from typing import Dict, Optional
 
 # Configuration
-BACKEND_URL = "https://wallex-replica.preview.emergentagent.com/api"
+BACKEND_URL = "https://crypto-exchange-copy-2.preview.emergentagent.com/api"
 TEST_USER_DATA = {
     "name": "علی احمدی",
     "email": "ali.ahmadi@example.com", 
