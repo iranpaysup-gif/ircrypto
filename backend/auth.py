@@ -8,8 +8,8 @@ import os
 import secrets
 import random
 
-from .models import User, UserCreate, UserLogin
-from .database import find_document, insert_document, update_document
+from models import User, UserCreate, UserLogin
+from database import find_document, insert_document, update_document
 
 # Security configuration
 SECRET_KEY = os.environ.get("SECRET_KEY", "your-secret-key-here-change-in-production")
