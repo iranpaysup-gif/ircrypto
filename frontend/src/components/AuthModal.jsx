@@ -91,17 +91,22 @@ const AuthModal = ({ isOpen, onClose, onSuccess }) => {
 
     setIsLoading(true);
     try {
-      // Mock registration - move to verification step
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const response = await authAPI.register({
+        name: `${formData.firstName} ${formData.lastName}`.trim(),
+        email: formData.email,
+        phone: formData.phone,
+        password: formData.password
+      });
+      
       setStep('verification');
       toast({
-        title: 'کد تأیید ارسال شد',
-        description: 'کد تأیید به شماره موبایل شما ارسال شد',
+        title: 'ثبت نام موفق',
+        description: response.data.message,
       });
     } catch (error) {
       toast({
         title: 'خطا',
-        description: 'خطا در ثبت نام. لطفاً دوباره تلاش کنید',
+        description: handleApiError(error),
         variant: 'destructive'
       });
     } finally {
