@@ -253,7 +253,7 @@ const CryptoMarket = ({ onCoinSelect }) => {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-gray-700">
-                      ${formatNumber(coin.volume24h)}
+                      ${formatNumber(coin.volume_24h)}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex space-x-2 space-x-reverse">
