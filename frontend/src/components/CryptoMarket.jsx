@@ -8,8 +8,10 @@ import { toast } from '../hooks/use-toast';
 const CryptoMarket = ({ onCoinSelect }) => {
   const [selectedTab, setSelectedTab] = useState('all');
   const [favorites, setFavorites] = useState(new Set());
-  const [sortBy, setSortBy] = useState('marketCap');
+  const [sortBy, setSortBy] = useState('market_cap');
   const [sortOrder, setSortOrder] = useState('desc');
+  const [cryptoData, setCryptoData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const tabs = [
     { id: 'all', label: 'همه', count: cryptoData.length },
