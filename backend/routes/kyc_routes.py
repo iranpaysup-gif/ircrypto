@@ -293,6 +293,82 @@ async def get_uploaded_documents(current_user = Depends(get_current_user)):
             detail=f"خطا در دریافت مدارک: {str(e)}"
         )
 
+@router.post("/verify-shahkar", response_model=ApiResponse)
+async def verify_national_id_shahkar(
+    verification_data: dict,
+    current_user = Depends(get_current_user)
+):
+    """Verify Iranian national ID using Shahkar system"""
+    try:
+        # Extract verification data
+        national_id = verification_data.get("national_id")
+        first_name = verification_data.get("first_name")
+        last_name = verification_data.get("last_name")
+        birth_date = verification_data.get("birth_date")
+        mobile_number = verification_data.get("mobile_number", current_user.phone)
+        
+        if not all([national_id, first_name, last_name, birth_date]):
+            raise HTTPException(
+                status_code=400,
+                detail="تمام اطلاعات (کد ملی، نام، نام خانوادگی، تاریخ تولد) ضروری است"
+            )
+        
+        # Create Shahkar verification request
+        shahkar_request = NationalIDVerificationRequest(
+            national_id=national_id,
+            first_name=first_name,
+            last_name=last_name,
+            birth_date=birth_date,
+            mobile_number=mobile_number
+        )
+        
+        # Verify with Shahkar
+        async with ApiIrService() as api_ir:
+            result = await api_ir.verify_shahkar(shahkar_request)
+            
+            # Store verification result
+            verification_record = {
+                "id": str(uuid.uuid4()),
+                "user_id": current_user.id,
+                "national_id": national_id,
+                "verification_type": "shahkar",
+                "verified": result.get("verified", False),
+                "status": result.get("status", "unknown"),
+                "verification_id": result.get("verification_id", ""),
+                "request_data": {
+                    "first_name": first_name,
+                    "last_name": last_name,
+                    "birth_date": birth_date,
+                    "mobile_number": mobile_number
+                },
+                "response_data": result,
+                "created_at": datetime.utcnow()
+            }
+            
+            await insert_document("shahkar_verifications", verification_record)
+            
+            return ApiResponse(
+                success=result.get("success", False),
+                message=result.get("message", "احراز هویت شهکار انجام شد"),
+                data={
+                    "verification_id": verification_record["id"],
+                    "shahkar_verification_id": result.get("verification_id", ""),
+                    "verified": result.get("verified", False),
+                    "status": result.get("status", "unknown"),
+                    "national_id": national_id,
+                    "mobile_number": mobile_number,
+                    "verified_at": result.get("verified_at")
+                }
+            )
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"خطا در احراز هویت شهکار: {str(e)}"
+        )
+
 @router.get("/requirements", response_model=ApiResponse)
 async def get_kyc_requirements():
     """Get KYC requirements and document types"""
