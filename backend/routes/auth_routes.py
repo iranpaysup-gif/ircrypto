@@ -84,21 +84,66 @@ async def login_user(user_data: UserLogin):
     )
 
 @router.post("/verify-phone", response_model=ApiResponse)
-async def verify_phone(verification_data: PhoneVerification):
-    """Verify phone number with SMS code"""
-    is_valid = await verify_phone_code(verification_data.phone, verification_data.code)
-    
-    if not is_valid:
+async def verify_phone_number(verification_data: PhoneVerification):
+    """Verify phone number with OTP code"""
+    try:
+        # Try to verify with existing system first
+        is_verified = await verify_phone_code(verification_data.phone, verification_data.code)
+        
+        if is_verified:
+            return ApiResponse(
+                success=True,
+                message="شماره موبایل با موفقیت تأیید شد",
+                data={
+                    "verified": True,
+                    "phone_number": verification_data.phone,
+                    "verified_at": "2025-09-28T19:50:00Z"
+                }
+            )
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="کد تأیید اشتباه است"
+            )
+    except HTTPException as e:
+        raise e
+    except Exception as e:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="کد تأیید اشتباه یا منقضی شده است"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"خطا در تأیید شماره موبایل: {str(e)}"
         )
-    
-    return ApiResponse(
-        success=True,
-        message="شماره موبایل با موفقیت تأیید شد",
-        data={"phone": verification_data.phone, "verified": True}
-    )
+
+@router.post("/send-otp", response_model=ApiResponse)
+async def send_otp_code(phone_request: PhoneVerificationRequest):
+    """Send OTP code using API.ir SMS service"""
+    try:
+        async with ApiIrService() as api_ir:
+            result = await api_ir.send_sms_otp(
+                phone_number=phone_request.phone_number,
+                purpose=phone_request.purpose
+            )
+            
+            if result["success"]:
+                return ApiResponse(
+                    success=True,
+                    message="کد تأیید با موفقیت ارسال شد",
+                    data={
+                        "phone_number": result["phone_number"],
+                        "expires_in": result["expires_in"],
+                        "request_id": result.get("request_id", "")
+                    }
+                )
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail=result.get("message", "خطا در ارسال SMS")
+                )
+                
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"خطا در ارسال کد تأیید: {str(e)}"
+        )
 
 @router.post("/resend-code", response_model=ApiResponse)
 async def resend_verification_code(phone_data: Dict[str, str]):
