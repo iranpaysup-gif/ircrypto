@@ -11,7 +11,7 @@ from database import (
     insert_document, find_documents, find_document, 
     update_document, delete_document
 )
-from crypto_service import get_crypto_service
+from wallex_service import get_wallex_service
 
 router = APIRouter(prefix="/trading", tags=["trading"])
 
