@@ -43,27 +43,16 @@ const AuthModal = ({ isOpen, onClose, onSuccess }) => {
 
     setIsLoading(true);
     try {
-      // Mock login - in real app, this would call the backend
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      const mockUser = {
-        id: Date.now(),
-        name: 'کاربر والکس',
+      const response = await authAPI.login({
         phone: formData.phone,
-        email: formData.email || 'user@wallex.ir',
-        level: 'Silver',
-        verified: true,
-        balance: {
-          IRR: 15000000,
-          USD: 357.14
-        }
-      };
+        password: formData.password
+      });
       
-      onSuccess(mockUser);
+      onSuccess(response.data);
     } catch (error) {
       toast({
         title: 'خطا',
-        description: 'خطا در ورود. لطفاً دوباره تلاش کنید',
+        description: handleApiError(error),
         variant: 'destructive'
       });
     } finally {
