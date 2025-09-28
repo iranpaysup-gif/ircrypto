@@ -106,13 +106,13 @@ class WallexService:
                     symbol=symbol,
                     name=market.get('en_base_asset', symbol),
                     name_persian=market.get('fa_base_asset', symbol),
-                    price=price,
-                    price_irr=price_irr,
-                    change_24h=change_24h,
-                    volume_24h=volume_24h,
-                    market_cap=0,  # Not provided by Wallex API
-                    high_24h=price * 1.05,  # Estimate
-                    low_24h=price * 0.95,   # Estimate
+                    price=float(price) if price else 0.0,
+                    price_irr=float(price_irr) if price_irr else 0.0,
+                    change_24h=float(change_24h) if change_24h else 0.0,
+                    volume_24h=float(volume_24h) if volume_24h else 0.0,
+                    market_cap=0.0,  # Not provided by Wallex API
+                    high_24h=float(price * 1.05) if price else 0.0,  # Estimate
+                    low_24h=float(price * 0.95) if price else 0.0,   # Estimate
                     logo_url=f"https://cdn.wallex.ir/static/media/crypto-icons/{symbol.lower()}.png",
                     updated_at=datetime.utcnow()
                 )
