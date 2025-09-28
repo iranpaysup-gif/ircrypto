@@ -93,17 +93,39 @@ const KYCModal = ({ isOpen, onClose, currentUser, onKYCUpdate }) => {
 
     try {
       setIsLoading(true);
-      await kycAPI.submit({
-        type: 'personal_info',
-        data: personalInfo
-      });
       
-      setCurrentStep(2);
-      toast({
-        title: 'موفقیت',
-        description: 'اطلاعات شخصی با موفقیت ثبت شد',
-        variant: 'default'
-      });
+      // Try Shahkar verification first
+      const shahkarData = {
+        national_id: personalInfo.nationalCode,
+        first_name: personalInfo.firstName,
+        last_name: personalInfo.lastName,
+        birth_date: personalInfo.birthDate,
+        mobile_number: currentUser?.phone
+      };
+      
+      const shahkarResponse = await kycAPI.verifyShahkar(shahkarData);
+      
+      if (shahkarResponse.success && shahkarResponse.data.verified) {
+        toast({
+          title: 'احراز هویت موفق',
+          description: 'هویت شما از طریق سامانه شهکار تایید شد',
+          variant: 'default'
+        });
+        setCurrentStep(4); // Skip to final step
+      } else {
+        // Continue with manual verification
+        await kycAPI.submit({
+          type: 'personal_info',
+          data: personalInfo
+        });
+        
+        setCurrentStep(2);
+        toast({
+          title: 'اطلاعات ثبت شد',
+          description: 'لطفاً مدارک مورد نیاز را آپلود کنید',
+          variant: 'default'
+        });
+      }
     } catch (error) {
       toast({
         title: 'خطا',
