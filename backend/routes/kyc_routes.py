@@ -119,7 +119,7 @@ async def upload_kyc_document(
         }
         
         # Remove existing document of same type
-        from ..database import get_database
+        from database import get_database
         db = await get_database()
         await db.kyc_documents.delete_many({
             "user_id": current_user.id,
