@@ -5,6 +5,7 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { toast } from '../hooks/use-toast';
+import { authAPI, handleApiError } from '../services/api';
 import { Eye, EyeOff, Phone, Mail, User } from 'lucide-react';
 
 const AuthModal = ({ isOpen, onClose, onSuccess }) => {
