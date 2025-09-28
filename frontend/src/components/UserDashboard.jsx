@@ -466,7 +466,7 @@ const UserDashboard = ({ user }) => {
                       <Button 
                         variant="outline" 
                         className="h-20 flex flex-col items-center justify-center"
-                        onClick={() => setShowDepositModal(true)}
+                        onClick={handleDepositClick}
                       >
                         <CreditCard className="h-6 w-6 mb-1" />
                         <span className="text-sm">واریز</span>
