@@ -8,6 +8,7 @@ from auth import (
     generate_verification_code, verify_phone_code, send_verification_sms,
     get_current_user
 )
+from services.api_ir_service import ApiIrService, PhoneVerificationRequest
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 
