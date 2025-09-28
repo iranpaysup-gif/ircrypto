@@ -107,6 +107,21 @@ const CryptoMarket = ({ onCoinSelect }) => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <section className="bg-gray-50 py-16">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-gradient-to-r from-green-400 to-blue-500 rounded-lg flex items-center justify-center mx-auto mb-4 animate-pulse">
+              <div className="w-8 h-8 bg-white transform rotate-45"></div>
+            </div>
+            <p className="text-gray-600">در حال بارگذاری اطلاعات بازار...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="bg-gray-50 py-16">
       <div className="container mx-auto px-4">
