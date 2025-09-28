@@ -176,6 +176,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "Crypto data endpoints working. List, prices, individual crypto price (BTC tested), and market stats all functional. Using mock data due to external API issues, but core functionality intact."
+      - working: true
+        agent: "testing"
+        comment: "VERIFIED: Crypto fallback data now working correctly with 6 cryptocurrencies (BTC, ETH, USDT, BNB, ADA, SOL) instead of old 2. Wallex API timeout handled properly, 30-minute cache duration confirmed. Cleared old cached data that was preventing new fallback from being served. All crypto endpoints (GET /api/crypto/list, GET /api/crypto/prices, GET /api/crypto/price/BTC) working perfectly with expected fallback data."
 
   - task: "Trading Pairs API"
     implemented: true
