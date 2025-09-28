@@ -67,8 +67,9 @@ async def get_crypto_chart(
 ):
     """Get chart data for cryptocurrency"""
     try:
-        service = await get_crypto_service()
-        chart_data = await service.get_chart_data(symbol, days)
+        service = await get_wallex_service()
+        # For now, use mock chart data as Wallex API chart endpoint needs separate implementation
+        chart_data = await generate_mock_chart_data(symbol, days)
         
         return chart_data
     except Exception as e:
