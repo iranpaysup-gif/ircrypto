@@ -4,8 +4,8 @@ from typing import List, Dict, Optional
 from datetime import datetime, timedelta
 import os
 
-from .models import CryptoCurrency, TradingPair, ChartData
-from .database import find_documents, update_document, insert_document, find_document
+from models import CryptoCurrency, TradingPair, ChartData
+from database import find_documents, update_document, insert_document, find_document
 
 # CoinGecko API configuration
 COINGECKO_API_URL = "https://api.coingecko.com/api/v3"
