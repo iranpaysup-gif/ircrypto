@@ -123,3 +123,25 @@ async def get_market_stats():
             status_code=500,
             detail=f"خطا در دریافت آمار بازار: {str(e)}"
         )
+
+async def generate_mock_chart_data(symbol: str, days: int = 7) -> List[ChartData]:
+    """Generate mock chart data for a cryptocurrency (until Wallex chart API is implemented)"""
+    base_price = 67850.0 if symbol == "BTC" else 3850.0
+    chart_data = []
+    
+    for i in range(days * 24):  # Hourly data
+        timestamp = datetime.utcnow() - timedelta(hours=days * 24 - i)
+        # Generate realistic price variations
+        variation = (hash(str(timestamp)) % 200 - 100) / 1000  # ±10% variation
+        price = base_price * (1 + variation)
+        
+        chart_data.append(ChartData(
+            timestamp=timestamp,
+            open=price,
+            high=price * 1.02,
+            low=price * 0.98,
+            close=price,
+            volume=1000000 + (hash(str(timestamp)) % 500000)
+        ))
+    
+    return chart_data
