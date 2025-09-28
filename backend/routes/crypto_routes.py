@@ -30,8 +30,8 @@ async def get_cryptocurrencies(
 async def get_crypto_prices():
     """Get current cryptocurrency prices"""
     try:
-        service = await get_crypto_service()
-        return await service.fetch_crypto_prices()
+        service = await get_wallex_service()
+        return await service.get_cryptocurrencies()
     except Exception as e:
         raise HTTPException(
             status_code=500,
