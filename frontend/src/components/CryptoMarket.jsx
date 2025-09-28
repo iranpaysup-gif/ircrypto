@@ -13,11 +13,33 @@ const CryptoMarket = ({ onCoinSelect }) => {
   const [cryptoData, setCryptoData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    fetchCryptoData();
+    // Set up auto refresh every 30 seconds
+    const interval = setInterval(fetchCryptoData, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const fetchCryptoData = async () => {
+    try {
+      const response = await cryptoAPI.getPrices();
+      setCryptoData(response.data);
+    } catch (error) {
+      toast({
+        title: 'خطا',
+        description: handleApiError(error),
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const tabs = [
     { id: 'all', label: 'همه', count: cryptoData.length },
     { id: 'favorites', label: 'علاقه‌مندی‌ها', count: favorites.size },
-    { id: 'gainers', label: 'صعودی', count: cryptoData.filter(c => c.change24h > 0).length },
-    { id: 'losers', label: 'نزولی', count: cryptoData.filter(c => c.change24h < 0).length }
+    { id: 'gainers', label: 'صعودی', count: cryptoData.filter(c => c.change_24h > 0).length },
+    { id: 'losers', label: 'نزولی', count: cryptoData.filter(c => c.change_24h < 0).length }
   ];
 
   const toggleFavorite = (coinId) => {
