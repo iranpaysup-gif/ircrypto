@@ -240,15 +240,15 @@ const CryptoMarket = ({ onCoinSelect }) => {
                     </td>
                     <td className="px-6 py-4">
                       <div className={`flex items-center space-x-1 space-x-reverse ${
-                        coin.change24h >= 0 ? 'text-green-600' : 'text-red-600'
+                        coin.change_24h >= 0 ? 'text-green-600' : 'text-red-600'
                       }`}>
-                        {coin.change24h >= 0 ? (
+                        {coin.change_24h >= 0 ? (
                           <TrendingUp className="h-4 w-4" />
                         ) : (
                           <TrendingDown className="h-4 w-4" />
                         )}
                         <span className="font-semibold">
-                          {Math.abs(coin.change24h).toFixed(2)}%
+                          {Math.abs(coin.change_24h).toFixed(2)}%
                         </span>
                       </div>
                     </td>
