@@ -88,6 +88,14 @@ const Header = ({ isAuthenticated, onLogin, onLogout, currentUser, onKYCClick })
                   <DropdownMenuItem className="text-white hover:bg-gray-800">
                     پروفایل
                   </DropdownMenuItem>
+                  {onKYCClick && (
+                    <DropdownMenuItem 
+                      className="text-white hover:bg-gray-800"
+                      onClick={onKYCClick}
+                    >
+                      احراز هویت
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem className="text-white hover:bg-gray-800">
                     کیف پول
                   </DropdownMenuItem>
