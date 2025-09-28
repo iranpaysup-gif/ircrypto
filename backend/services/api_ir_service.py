@@ -16,7 +16,7 @@ from enum import Enum
 from pydantic import BaseModel, Field, validator
 
 # Configuration from environment
-from backend.config import settings
+from config import settings
 
 logger = logging.getLogger(__name__)
 
