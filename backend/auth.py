@@ -145,7 +145,7 @@ async def generate_verification_code(phone: str) -> str:
     }
     
     # Remove any existing codes for this phone
-    from .database import get_database
+    from database import get_database
     db = await get_database()
     await db.verification_codes.delete_many({"phone": phone})
     
