@@ -127,27 +127,27 @@ const AuthModal = ({ isOpen, onClose, onSuccess }) => {
 
     setIsLoading(true);
     try {
-      // Mock verification
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const mockUser = {
-        id: Date.now(),
-        name: `${formData.firstName} ${formData.lastName}`.trim(),
+      await authAPI.verifyPhone({
         phone: formData.phone,
-        email: formData.email,
-        level: 'Bronze',
-        verified: true,
-        balance: {
-          IRR: 0,
-          USD: 0
-        }
-      };
+        code: formData.verificationCode
+      });
       
-      onSuccess(mockUser);
+      // Now log in the user
+      const loginResponse = await authAPI.login({
+        phone: formData.phone,
+        password: formData.password
+      });
+      
+      toast({
+        title: 'تأیید موفق',
+        description: 'حساب کاربری شما با موفقیت فعال شد',
+      });
+      
+      onSuccess(loginResponse.data);
     } catch (error) {
       toast({
         title: 'خطا',
-        description: 'کد تأیید اشتباه است',
+        description: handleApiError(error),
         variant: 'destructive'
       });
     } finally {
