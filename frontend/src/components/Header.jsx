@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 
-const Header = ({ isAuthenticated, onLogin, onLogout, currentUser }) => {
+const Header = ({ isAuthenticated, onLogin, onLogout, currentUser, onKYCClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navigationItems = [
