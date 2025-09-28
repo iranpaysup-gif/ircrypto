@@ -18,7 +18,7 @@ async def clear_crypto_cache():
     await connect_to_mongo()
     
     # Delete all cached cryptocurrency data
-    result = await db_instance.db.cryptocurrencies.delete_many({})
+    result = await db_instance.database.cryptocurrencies.delete_many({})
     print(f"Deleted {result.deleted_count} cached cryptocurrency records")
     
     await close_mongo_connection()
