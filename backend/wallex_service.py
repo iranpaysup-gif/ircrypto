@@ -48,8 +48,14 @@ class WallexService:
         return self.session
     
     async def fetch_markets(self) -> List[dict]:
-        """Fetch all available markets from Wallex API"""
+        """Fetch all available markets from Wallex API with caching"""
         try:
+            # Check if we have cached data and it's still valid
+            if (self.markets_cache and self.last_update and 
+                datetime.utcnow() - self.last_update < self.cache_duration):
+                logger.info("Using cached markets data (within 30-minute window)")
+                return list(self.markets_cache.values())
+            
             session = await self.get_session()
             url = f"{WALLEX_API_URL}/hector/web/v1/markets"
             
@@ -59,6 +65,7 @@ class WallexService:
                     if data.get('result', {}).get('success'):
                         markets = data['result']['markets']
                         self.markets_cache = {market['symbol']: market for market in markets}
+                        self.last_update = datetime.utcnow()
                         logger.info(f"Fetched {len(markets)} markets from Wallex API")
                         return markets
                     else:
