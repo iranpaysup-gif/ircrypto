@@ -210,11 +210,12 @@ class IranianExchangeTester:
             files = {
                 'file': ('national_id.jpg', mock_image_content, 'image/jpeg')
             }
-            data = {
+            # document_type should be a query parameter
+            query_params = {
                 'document_type': 'national_id'
             }
             
-            response = self.make_request("POST", "/kyc/upload-document", data=data, files=files)
+            response = self.make_request("POST", "/kyc/upload-document", data=query_params, files=files)
             
             if response.status_code == 200:
                 response_data = response.json()
