@@ -236,7 +236,7 @@ const CryptoMarket = ({ onCoinSelect }) => {
                       ${formatPrice(coin.price)}
                     </td>
                     <td className="px-6 py-4 text-gray-700">
-                      {coin.priceIRR.toLocaleString()} ریال
+                      {coin.price_irr.toLocaleString()} ریال
                     </td>
                     <td className="px-6 py-4">
                       <div className={`flex items-center space-x-1 space-x-reverse ${
