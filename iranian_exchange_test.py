@@ -215,7 +215,7 @@ class IranianExchangeTester:
                 'document_type': 'national_id'
             }
             
-            response = self.make_request("POST", "/kyc/upload-document", data=query_params, files=files)
+            response = self.make_request("POST", "/kyc/upload-document", data=None, files=files, params=query_params)
             
             if response.status_code == 200:
                 response_data = response.json()
