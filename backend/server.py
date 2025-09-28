@@ -18,7 +18,7 @@ from routes.wallet_routes import router as wallet_router
 from routes.kyc_routes import router as kyc_router
 
 # Import crypto service
-from crypto_service import update_crypto_prices_task
+from wallex_service import update_wallex_prices_task
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
