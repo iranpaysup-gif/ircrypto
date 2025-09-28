@@ -8,17 +8,17 @@ import asyncio
 from pathlib import Path
 
 # Import database functions
-from .database import connect_to_mongo, close_mongo_connection
+from database import connect_to_mongo, close_mongo_connection
 
 # Import route modules
-from .routes.auth_routes import router as auth_router
-from .routes.crypto_routes import router as crypto_router
-from .routes.trading_routes import router as trading_router
-from .routes.wallet_routes import router as wallet_router
-from .routes.kyc_routes import router as kyc_router
+from routes.auth_routes import router as auth_router
+from routes.crypto_routes import router as crypto_router
+from routes.trading_routes import router as trading_router
+from routes.wallet_routes import router as wallet_router
+from routes.kyc_routes import router as kyc_router
 
 # Import crypto service
-from .crypto_service import update_crypto_prices_task
+from crypto_service import update_crypto_prices_task
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
