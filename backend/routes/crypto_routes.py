@@ -13,8 +13,8 @@ async def get_cryptocurrencies(
 ):
     """Get list of supported cryptocurrencies with current prices"""
     try:
-        service = await get_crypto_service()
-        cryptos = await service.fetch_crypto_prices()
+        service = await get_wallex_service()
+        cryptos = await service.get_cryptocurrencies()
         
         # Apply pagination
         paginated_cryptos = cryptos[offset:offset + limit]
@@ -93,8 +93,8 @@ async def get_trading_pairs():
 async def get_market_stats():
     """Get overall market statistics"""
     try:
-        service = await get_crypto_service()
-        cryptos = await service.fetch_crypto_prices()
+        service = await get_wallex_service()
+        cryptos = await service.get_cryptocurrencies()
         
         total_market_cap = sum(crypto.market_cap for crypto in cryptos)
         total_volume_24h = sum(crypto.volume_24h for crypto in cryptos)
