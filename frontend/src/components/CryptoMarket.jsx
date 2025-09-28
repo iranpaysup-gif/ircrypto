@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
-import { cryptoData } from '../mock/data';
+import { cryptoAPI, handleApiError } from '../services/api';
 import { TrendingUp, TrendingDown, Star } from 'lucide-react';
+import { toast } from '../hooks/use-toast';
 
 const CryptoMarket = ({ onCoinSelect }) => {
   const [selectedTab, setSelectedTab] = useState('all');
