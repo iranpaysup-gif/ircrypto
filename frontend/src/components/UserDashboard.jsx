@@ -156,6 +156,127 @@ const UserDashboard = ({ user }) => {
 
           {/* Overview Tab */}
           <TabsContent value="overview">
+            {kycStatus.status !== 'approved' && (
+              <div className="mb-8">
+                <Card className="border-yellow-200 bg-yellow-50">
+                  <CardContent className="p-6">
+                    <div className="flex items-center">
+                      <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center ml-4">
+                        <AlertCircle className="h-6 w-6 text-yellow-600" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-yellow-800">احراز هویت لازم است</h3>
+                        <p className="text-yellow-700">
+                          برای استفاده از تمام امکانات والکس، لطفاً احراز هویت خود را تکمیل کنید.
+                        </p>
+                      </div>
+                      <Button 
+                        onClick={() => setShowKYCModal(true)}
+                        className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                      >
+                        تکمیل احراز هویت
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+          </TabsContent>
+
+          {/* KYC Tab */}
+          <TabsContent value="kyc">
+            <div className="grid lg:grid-cols-2 gap-8">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center">
+                    <Shield className="h-5 w-5 ml-2" />
+                    وضعیت احراز هویت
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span>سطح فعلی:</span>
+                      <Badge variant="outline">سطح {kycStatus.level}</Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span>وضعیت:</span>
+                      {getKYCStatusBadge()}
+                    </div>
+                    {kycStatus.status === 'approved' ? (
+                      <div className="bg-green-50 p-4 rounded-lg">
+                        <div className="flex items-center text-green-800">
+                          <CheckCircle className="h-5 w-5 ml-2" />
+                          <span>احراز هویت شما تایید شده است</span>
+                        </div>
+                        <p className="text-sm text-green-700 mt-2">
+                          شما می‌توانید از تمام امکانات والکس استفاده کنید.
+                        </p>
+                      </div>
+                    ) : kycStatus.status === 'pending' ? (
+                      <div className="bg-yellow-50 p-4 rounded-lg">
+                        <div className="flex items-center text-yellow-800">
+                          <Clock className="h-5 w-5 ml-2" />
+                          <span>مدارک شما در حال بررسی است</span>
+                        </div>
+                        <p className="text-sm text-yellow-700 mt-2">
+                          لطفاً منتظر بررسی نهایی توسط تیم ما باشید.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="bg-blue-50 p-4 rounded-lg">
+                        <div className="flex items-center text-blue-800">
+                          <Users className="h-5 w-5 ml-2" />
+                          <span>احراز هویت خود را تکمیل کنید</span>
+                        </div>
+                        <p className="text-sm text-blue-700 mt-2 mb-3">
+                          برای دسترسی به تمام امکانات، احراز هویت لازم است.
+                        </p>
+                        <Button 
+                          onClick={() => setShowKYCModal(true)}
+                          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                        >
+                          شروع احراز هویت
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">مزایای احراز هویت</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-green-500 ml-2" />
+                      <span className="text-sm">امکان واریز و برداشت تومان</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-green-500 ml-2" />
+                      <span className="text-sm">افزایش حدود معاملاتی</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-green-500 ml-2" />
+                      <span className="text-sm">دسترسی به معاملات پیشرفته</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-green-500 ml-2" />
+                      <span className="text-sm">امنیت بالاتر حساب کاربری</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-green-500 ml-2" />
+                      <span className="text-sm">پشتیبانی اولویت‌دار</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="overview">
             <div className="grid lg:grid-cols-3 gap-8">
               {/* Balance Overview */}
               <div className="lg:col-span-2 space-y-6">
