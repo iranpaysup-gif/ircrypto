@@ -234,7 +234,7 @@ class WallexAPITester:
                 self.log_test("Crypto Price BTC", False, f"Status code: {response.status_code}")
                 
             # Test trading pairs
-            response = self.make_request("GET", "/trading/pairs")
+            response = self.make_request("GET", "/crypto/pairs")
             if response.status_code == 200:
                 data = response.json()
                 if isinstance(data, list):
