@@ -402,21 +402,33 @@ const AuthModal = ({ isOpen, onClose, onSuccess }) => {
               />
             </div>
 
-            <div className="flex space-x-4 space-x-reverse">
+            <div className="space-y-3">
+              <div className="flex space-x-4 space-x-reverse">
+                <Button 
+                  type="button"
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => setStep('form')}
+                >
+                  بازگشت
+                </Button>
+                <Button 
+                  type="submit" 
+                  className="flex-1 bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white"
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'در حال تأیید...' : 'تأیید'}
+                </Button>
+              </div>
+              
               <Button 
                 type="button"
-                variant="outline"
-                className="flex-1"
-                onClick={() => setStep('form')}
-              >
-                بازگشت
-              </Button>
-              <Button 
-                type="submit" 
-                className="flex-1 bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white"
+                variant="ghost"
+                className="w-full text-blue-600 hover:text-blue-700"
+                onClick={handleResendOTP}
                 disabled={isLoading}
               >
-                {isLoading ? 'در حال تأیید...' : 'تأیید'}
+                ارسال مجدد کد تأیید
               </Button>
             </div>
           </form>
