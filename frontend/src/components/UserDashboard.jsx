@@ -483,6 +483,12 @@ const UserDashboard = ({ user }) => {
             </div>
           </TabsContent>
         </Tabs>
+        
+        {/* Deposit Modal */}
+        <DepositModal 
+          isOpen={showDepositModal} 
+          onClose={() => setShowDepositModal(false)} 
+        />
       </div>
     </div>
   );
