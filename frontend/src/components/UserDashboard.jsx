@@ -31,6 +31,11 @@ const UserDashboard = ({ user }) => {
   const [showBalance, setShowBalance] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
   const [showDepositModal, setShowDepositModal] = useState(false);
+  const [showKYCModal, setShowKYCModal] = useState(false);
+  const [showCardToCardModal, setShowCardToCardModal] = useState(false);
+  const [kycStatus, setKycStatus] = useState({ level: 0, status: 'pending' });
+  const [walletBalance, setWalletBalance] = useState({ TMN: 0, USD: 0 });
+  const [isLoading, setIsLoading] = useState(false);
 
   const formatNumber = (num) => {
     return new Intl.NumberFormat('fa-IR').format(num);
