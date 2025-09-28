@@ -413,6 +413,7 @@ test_plan:
   test_all: true
   test_priority: "high_first"
   completed: true
+  api_ir_integration_tested: true
 
 agent_communication:
   - agent: "testing"
