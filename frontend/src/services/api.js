@@ -92,15 +92,27 @@ export const kycAPI = {
   uploadDocument: (documentType, file) => {
     const formData = new FormData();
     formData.append('file', file);
-    return api.post(`/kyc/upload-document?document_type=${documentType}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+    formData.append('document_type', documentType);
+    return api.post('/kyc/upload-document', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
     });
   },
   submit: (applicationData) => api.post('/kyc/submit', applicationData),
+  verifyShahkar: (shahkarData) => api.post('/kyc/verify-shahkar', shahkarData),
   getDocuments: () => api.get('/kyc/documents'),
   getRequirements: () => api.get('/kyc/requirements'),
+};
+
+// SMS OTP API
+export const smsAPI = {
+  sendOTP: (phoneNumber, purpose = 'verification') => api.post('/auth/send-otp', {
+    phone_number: phoneNumber,
+    purpose: purpose
+  }),
+  verifyOTP: (phoneNumber, otpCode) => api.post('/auth/verify-phone', {
+    phone: phoneNumber,
+    code: otpCode
+  })
 };
 
 // Utility functions
