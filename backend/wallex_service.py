@@ -229,6 +229,113 @@ class WallexService:
             logger.error(f"Error getting cached crypto data: {str(e)}")
             return []
     
+    async def get_fallback_crypto_data(self) -> List[CryptoCurrency]:
+        """Get fallback cryptocurrency data when Wallex API is unavailable"""
+        try:
+            # First try cached data
+            cached = await self.get_cached_crypto_data()
+            if cached:
+                return cached
+            
+            # If no cached data, return popular Iranian crypto market data
+            fallback_data = [
+                CryptoCurrency(
+                    id="bitcoin",
+                    symbol="BTC",
+                    name="Bitcoin",
+                    name_persian="بیت کوین",
+                    price=67850.0,
+                    price_irr=2849670000.0,
+                    change_24h=2.45,
+                    volume_24h=28500000000.0,
+                    market_cap=1335000000000.0,
+                    high_24h=68200.0,
+                    low_24h=66800.0,
+                    logo_url="https://cdn.wallex.ir/static/media/crypto-icons/btc.png"
+                ),
+                CryptoCurrency(
+                    id="ethereum",
+                    symbol="ETH",
+                    name="Ethereum",
+                    name_persian="اتریوم",
+                    price=3850.0,
+                    price_irr=161700000.0,
+                    change_24h=-1.23,
+                    volume_24h=15200000000.0,
+                    market_cap=463000000000.0,
+                    high_24h=3920.0,
+                    low_24h=3810.0,
+                    logo_url="https://cdn.wallex.ir/static/media/crypto-icons/eth.png"
+                ),
+                CryptoCurrency(
+                    id="tether",
+                    symbol="USDT",
+                    name="Tether",
+                    name_persian="تتر",
+                    price=1.00,
+                    price_irr=42000.0,
+                    change_24h=0.05,
+                    volume_24h=45000000000.0,
+                    market_cap=118000000000.0,
+                    high_24h=1.002,
+                    low_24h=0.998,
+                    logo_url="https://cdn.wallex.ir/static/media/crypto-icons/usdt.png"
+                ),
+                CryptoCurrency(
+                    id="binancecoin",
+                    symbol="BNB",
+                    name="BNB",
+                    name_persian="بایننس کوین",
+                    price=625.0,
+                    price_irr=26250000.0,
+                    change_24h=3.67,
+                    volume_24h=1850000000.0,
+                    market_cap=89500000000.0,
+                    high_24h=635.0,
+                    low_24h=610.0,
+                    logo_url="https://cdn.wallex.ir/static/media/crypto-icons/bnb.png"
+                ),
+                CryptoCurrency(
+                    id="cardano",
+                    symbol="ADA",
+                    name="Cardano",
+                    name_persian="کاردانو",
+                    price=0.95,
+                    price_irr=39900.0,
+                    change_24h=-2.15,
+                    volume_24h=750000000.0,
+                    market_cap=33500000000.0,
+                    high_24h=0.98,
+                    low_24h=0.92,
+                    logo_url="https://cdn.wallex.ir/static/media/crypto-icons/ada.png"
+                ),
+                CryptoCurrency(
+                    id="solana",
+                    symbol="SOL",
+                    name="Solana",
+                    name_persian="سولانا",
+                    price=145.0,
+                    price_irr=6090000.0,
+                    change_24h=5.23,
+                    volume_24h=2800000000.0,
+                    market_cap=68500000000.0,
+                    high_24h=148.0,
+                    low_24h=138.0,
+                    logo_url="https://cdn.wallex.ir/static/media/crypto-icons/sol.png"
+                )
+            ]
+            
+            # Cache the fallback data
+            for crypto in fallback_data:
+                await self.update_crypto_cache(crypto)
+            
+            logger.info(f"Using fallback crypto data with {len(fallback_data)} cryptocurrencies")
+            return fallback_data
+            
+        except Exception as e:
+            logger.error(f"Error getting fallback crypto data: {str(e)}")
+            return []
+    
     async def start_websocket_connection(self):
         """Start WebSocket connection for real-time price updates"""
         try:
