@@ -227,7 +227,7 @@ const CryptoMarket = ({ onCoinSelect }) => {
                           }}
                         />
                         <div>
-                          <div className="font-semibold text-gray-900">{coin.name}</div>
+                          <div className="font-semibold text-gray-900">{coin.name_persian}</div>
                           <div className="text-sm text-gray-500">{coin.symbol}</div>
                         </div>
                       </div>
