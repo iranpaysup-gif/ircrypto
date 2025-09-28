@@ -420,12 +420,12 @@ async def update_wallex_prices_task():
     # Start WebSocket connection for real-time updates
     websocket_task = asyncio.create_task(service.start_websocket_connection())
     
-    # Periodic API refresh (every 5 minutes)
+    # Periodic API refresh (every 30 minutes)
     while True:
         try:
-            await asyncio.sleep(300)  # 5 minutes
+            await asyncio.sleep(1800)  # 30 minutes (30 * 60 = 1800 seconds)
             await service.get_cryptocurrencies()
             logger.info("Periodic Wallex data refresh completed")
         except Exception as e:
             logger.error(f"Error in periodic Wallex update: {str(e)}")
-            await asyncio.sleep(60)  # Wait 1 minute before retry
+            await asyncio.sleep(300)  # Wait 5 minutes before retry on error
