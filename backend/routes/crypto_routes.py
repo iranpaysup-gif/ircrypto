@@ -42,7 +42,7 @@ async def get_crypto_prices():
 async def get_crypto_price(symbol: str):
     """Get price for specific cryptocurrency"""
     try:
-        service = await get_crypto_service()
+        service = await get_wallex_service()
         crypto = await service.get_crypto_by_symbol(symbol)
         
         if not crypto:
