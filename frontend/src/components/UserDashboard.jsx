@@ -136,14 +136,9 @@ const UserDashboard = ({ user }) => {
               <p className="text-gray-600">خوش آمدید {user.name}</p>
             </div>
             <div className="flex items-center space-x-4 space-x-reverse mt-4 lg:mt-0">
-              <Badge 
-                variant={user.verified ? "default" : "secondary"}
-                className={user.verified ? "bg-green-100 text-green-800" : ""}
-              >
-                {user.verified ? 'تأیید شده' : 'تأیید نشده'}
-              </Badge>
+              {getKYCStatusBadge()}
               <Badge variant="outline">
-                سطح {user.level}
+                سطح {kycStatus.level}
               </Badge>
             </div>
           </div>
