@@ -179,6 +179,19 @@ function App() {
           />
         )}
         
+        <KYCModal
+          isOpen={showKYCModal}
+          onClose={() => setShowKYCModal(false)}
+          currentUser={currentUser}
+          onKYCUpdate={() => {
+            setShowKYCModal(false);
+            // Refresh user data after KYC completion
+            if (currentUser) {
+              initializeAuth();
+            }
+          }}
+        />
+        
         <Toaster />
       </BrowserRouter>
     </div>
