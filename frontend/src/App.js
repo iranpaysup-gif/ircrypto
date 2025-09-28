@@ -7,6 +7,7 @@ import CryptoMarket from './components/CryptoMarket';
 import TradingInterface from './components/TradingInterface';
 import AuthModal from './components/AuthModal';
 import UserDashboard from './components/UserDashboard';
+import KYCModal from './components/KYCModal';
 import Footer from './components/Footer';
 import { toast } from './hooks/use-toast';
 import { authAPI, handleApiError, isTokenValid } from './services/api';
