@@ -14,19 +14,38 @@ router = APIRouter(prefix="/auth", tags=["authentication"])
 
 @router.post("/register", response_model=ApiResponse)
 async def register_user(user_data: UserCreate):
-    """Register a new user"""
+    """Register a new user with SMS verification"""
     try:
         user = await create_user(user_data)
         
-        # Generate and send verification code
-        code = await generate_verification_code(user.phone)
-        await send_verification_sms(user.phone, code)
+        # Send SMS OTP using API.ir service
+        async with ApiIrService() as api_ir:
+            sms_result = await api_ir.send_sms_otp(
+                phone_number=user.phone,
+                purpose="registration"
+            )
+            
+            if sms_result["success"]:
+                return ApiResponse(
+                    success=True,
+                    message="کاربر با موفقیت ثبت شد. کد تأیید به شماره موبایل شما ارسال شد",
+                    data={
+                        "user_id": user.id, 
+                        "requires_verification": True,
+                        "otp_expires_in": sms_result.get("expires_in", 300)
+                    }
+                )
+            else:
+                # Fallback to original SMS service if API.ir fails
+                code = await generate_verification_code(user.phone)
+                await send_verification_sms(user.phone, code)
+                
+                return ApiResponse(
+                    success=True,
+                    message="کاربر با موفقیت ثبت شد. کد تأیید به شماره موبایل شما ارسال شد",
+                    data={"user_id": user.id, "requires_verification": True}
+                )
         
-        return ApiResponse(
-            success=True,
-            message="کاربر با موفقیت ثبت شد. کد تأیید به شماره موبایل شما ارسال شد",
-            data={"user_id": user.id, "requires_verification": True}
-        )
     except HTTPException as e:
         raise e
     except Exception as e:
