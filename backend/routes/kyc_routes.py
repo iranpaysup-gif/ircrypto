@@ -10,6 +10,7 @@ from database import (
     insert_document, find_documents, find_document, 
     update_document
 )
+from services.api_ir_service import ApiIrService, NationalIDVerificationRequest
 
 router = APIRouter(prefix="/kyc", tags=["kyc"])
 
