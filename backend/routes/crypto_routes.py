@@ -3,6 +3,7 @@ from typing import List, Optional
 
 from models import CryptoCurrency, TradingPair, ChartData, ApiResponse
 from wallex_service import get_wallex_service
+from datetime import datetime, timedelta
 
 router = APIRouter(prefix="/crypto", tags=["cryptocurrency"])
 
