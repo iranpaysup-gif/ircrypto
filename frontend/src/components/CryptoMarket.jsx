@@ -60,10 +60,10 @@ const CryptoMarket = ({ onCoinSelect }) => {
         filtered = filtered.filter(coin => favorites.has(coin.id));
         break;
       case 'gainers':
-        filtered = filtered.filter(coin => coin.change24h > 0);
+        filtered = filtered.filter(coin => coin.change_24h > 0);
         break;
       case 'losers':
-        filtered = filtered.filter(coin => coin.change24h < 0);
+        filtered = filtered.filter(coin => coin.change_24h < 0);
         break;
       default:
         break;
