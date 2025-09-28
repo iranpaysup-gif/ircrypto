@@ -105,6 +105,14 @@ function App() {
     setSelectedCoin(coin);
   };
 
+  const handleKYCClick = () => {
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
+    }
+    setShowKYCModal(true);
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
