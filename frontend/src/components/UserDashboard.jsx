@@ -106,7 +106,10 @@ const UserDashboard = ({ user }) => {
                         ≈ {showBalance ? formatCurrency(user.balance.USD, 'USD') : '•••'}
                       </div>
                       <div className="flex justify-center space-x-4 space-x-reverse mt-6">
-                        <Button className="bg-green-600 hover:bg-green-700 text-white">
+                        <Button 
+                          className="bg-green-600 hover:bg-green-700 text-white"
+                          onClick={() => setShowDepositModal(true)}
+                        >
                           واریز
                         </Button>
                         <Button variant="outline">
