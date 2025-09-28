@@ -76,58 +76,93 @@ class WallexService:
         """Convert Wallex markets to CryptoCurrency objects"""
         try:
             markets = await self.fetch_markets()
+            
+            # If no markets fetched, return cached or fallback data
+            if not markets:
+                logger.warning("No markets fetched from Wallex API, using fallback data")
+                return await self.get_fallback_crypto_data()
+            
             cryptocurrencies = []
             
             for market in markets:
-                # Only include USDT and TMN based markets for now
-                if not market.get('is_usdt_based') and not market.get('is_tmn_based'):
+                try:
+                    # Validate market data
+                    if not isinstance(market, dict):
+                        continue
+                    
+                    # Only include USDT and TMN based markets for now
+                    is_usdt = market.get('is_usdt_based', False)
+                    is_tmn = market.get('is_tmn_based', False)
+                    
+                    if not is_usdt and not is_tmn:
+                        continue
+                    
+                    # Extract base asset (the crypto being traded)
+                    base_asset = market.get('base_asset', '')
+                    symbol = market.get('en_base_asset', base_asset)
+                    
+                    if not symbol:
+                        continue
+                        
+                    symbol = symbol.upper()
+                    
+                    # Skip if it's the quote currency itself
+                    if symbol in ['USDT', 'TMN', 'IRT']:
+                        continue
+                    
+                    # Safely convert numeric values
+                    price = self._safe_float(market.get('price', 0))
+                    change_24h = self._safe_float(market.get('change_24h', 0))
+                    volume_24h = self._safe_float(market.get('volume_24h', 0))
+                    
+                    # Calculate IRR price
+                    if is_tmn:
+                        price_irr = price  # Already in TMN/IRR
+                    else:
+                        price_irr = price * IRR_USD_RATE  # Convert from USDT to IRR
+                    
+                    crypto = CryptoCurrency(
+                        id=symbol.lower(),
+                        symbol=symbol,
+                        name=market.get('en_base_asset', symbol),
+                        name_persian=market.get('fa_base_asset', symbol),
+                        price=price,
+                        price_irr=price_irr,
+                        change_24h=change_24h,
+                        volume_24h=volume_24h,
+                        market_cap=0.0,  # Not provided by Wallex API
+                        high_24h=price * 1.05 if price > 0 else 0.0,  # Estimate
+                        low_24h=price * 0.95 if price > 0 else 0.0,   # Estimate
+                        logo_url=f"https://cdn.wallex.ir/static/media/crypto-icons/{symbol.lower()}.png",
+                        updated_at=datetime.utcnow()
+                    )
+                    
+                    cryptocurrencies.append(crypto)
+                    
+                    # Update database cache
+                    await self.update_crypto_cache(crypto)
+                
+                except Exception as market_error:
+                    logger.error(f"Error processing market {market}: {str(market_error)}")
                     continue
-                
-                # Extract base asset (the crypto being traded)
-                base_asset = market.get('base_asset', '')
-                symbol = market.get('en_base_asset', base_asset).upper()
-                
-                # Skip if it's the quote currency itself
-                if symbol in ['USDT', 'TMN', 'IRT']:
-                    continue
-                
-                price = float(market.get('price', 0))
-                change_24h = float(market.get('change_24h', 0))
-                volume_24h = float(market.get('volume_24h', 0))
-                
-                # Calculate IRR price
-                if market.get('is_tmn_based'):
-                    price_irr = price  # Already in TMN/IRR
-                else:
-                    price_irr = price * IRR_USD_RATE  # Convert from USDT to IRR
-                
-                crypto = CryptoCurrency(
-                    id=symbol.lower(),
-                    symbol=symbol,
-                    name=market.get('en_base_asset', symbol),
-                    name_persian=market.get('fa_base_asset', symbol),
-                    price=float(price) if price else 0.0,
-                    price_irr=float(price_irr) if price_irr else 0.0,
-                    change_24h=float(change_24h) if change_24h else 0.0,
-                    volume_24h=float(volume_24h) if volume_24h else 0.0,
-                    market_cap=0.0,  # Not provided by Wallex API
-                    high_24h=float(price * 1.05) if price else 0.0,  # Estimate
-                    low_24h=float(price * 0.95) if price else 0.0,   # Estimate
-                    logo_url=f"https://cdn.wallex.ir/static/media/crypto-icons/{symbol.lower()}.png",
-                    updated_at=datetime.utcnow()
-                )
-                
-                cryptocurrencies.append(crypto)
-                
-                # Update database cache
-                await self.update_crypto_cache(crypto)
             
             logger.info(f"Processed {len(cryptocurrencies)} cryptocurrencies from Wallex")
-            return cryptocurrencies
+            return cryptocurrencies if cryptocurrencies else await self.get_fallback_crypto_data()
         
         except Exception as e:
             logger.error(f"Error processing Wallex cryptocurrencies: {str(e)}")
-            return await self.get_cached_crypto_data()
+            return await self.get_fallback_crypto_data()
+    
+    def _safe_float(self, value, default=0.0):
+        """Safely convert value to float"""
+        try:
+            if value is None or value == '':
+                return default
+            if isinstance(value, bool):
+                return float(value)
+            return float(value)
+        except (ValueError, TypeError):
+            return default
     
     async def get_trading_pairs(self) -> List[TradingPair]:
         """Get available trading pairs from Wallex"""
