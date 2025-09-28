@@ -182,7 +182,41 @@ async def submit_kyc_application(
                 detail="تمام اطلاعات شخصی ضروری است"
             )
         
-        # Create KYC submission
+        # Verify identity using Shahkar system
+        shahkar_verification = {"verified": False, "status": "not_verified"}
+        
+        try:
+            # Split full name into first and last name
+            name_parts = full_name.strip().split()
+            first_name = name_parts[0] if name_parts else full_name
+            last_name = " ".join(name_parts[1:]) if len(name_parts) > 1 else ""
+            
+            shahkar_request = NationalIDVerificationRequest(
+                national_id=national_id,
+                first_name=first_name,
+                last_name=last_name,
+                birth_date=birth_date,
+                mobile_number=phone
+            )
+            
+            async with ApiIrService() as api_ir:
+                shahkar_result = await api_ir.verify_shahkar(shahkar_request)
+                shahkar_verification = {
+                    "verified": shahkar_result.get("verified", False),
+                    "status": shahkar_result.get("status", "unknown"),
+                    "verification_id": shahkar_result.get("verification_id", ""),
+                    "verified_at": shahkar_result.get("verified_at")
+                }
+        except Exception as e:
+            # Log Shahkar error but continue with manual verification
+            print(f"Shahkar verification failed: {str(e)}")
+            shahkar_verification = {
+                "verified": False, 
+                "status": "error",
+                "error": str(e)
+            }
+
+        # Create KYC submission with Shahkar results
         submission = {
             "id": str(uuid.uuid4()),
             "user_id": current_user.id,
@@ -191,22 +225,36 @@ async def submit_kyc_application(
             "birth_date": birth_date,
             "address": address,
             "phone": phone,
-            "status": "pending",  # pending, approved, rejected
+            "status": "shahkar_verified" if shahkar_verification["verified"] else "pending",
+            "shahkar_verification": shahkar_verification,
             "created_at": datetime.utcnow(),
-            "admin_notes": "",
-            "reviewed_at": None,
-            "reviewed_by": None
+            "admin_notes": "احراز هویت شهکار موفق" if shahkar_verification["verified"] else "نیاز به بررسی دستی",
+            "reviewed_at": datetime.utcnow() if shahkar_verification["verified"] else None,
+            "reviewed_by": "shahkar_system" if shahkar_verification["verified"] else None
         }
         
         await insert_document("kyc_submissions", submission)
         
+        # If Shahkar verified, update user verification status
+        if shahkar_verification["verified"]:
+            from database import get_database
+            db = await get_database()
+            await db.users.update_one(
+                {"id": current_user.id},
+                {"$set": {"verified": True, "level": 1, "kyc_verified_at": datetime.utcnow()}}
+            )
+        
+        message = "احراز هویت با موفقیت تأیید شد" if shahkar_verification["verified"] else "درخواست احراز هویت ثبت شد و در انتظار بررسی ادمین قرار گرفت"
+        
         return ApiResponse(
             success=True,
-            message="درخواست احراز هویت ثبت شد و در انتظار بررسی ادمین قرار گرفت",
+            message=message,
             data={
                 "submission_id": submission["id"],
-                "status": "pending",
-                "created_at": submission["created_at"]
+                "status": submission["status"],
+                "shahkar_verified": shahkar_verification["verified"],
+                "created_at": submission["created_at"],
+                "auto_approved": shahkar_verification["verified"]
             }
         )
     
