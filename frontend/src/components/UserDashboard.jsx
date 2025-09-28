@@ -145,8 +145,9 @@ const UserDashboard = ({ user }) => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-5 mb-8">
+          <TabsList className="grid w-full grid-cols-6 mb-8">
             <TabsTrigger value="overview">کلی</TabsTrigger>
+            <TabsTrigger value="kyc">احراز هویت</TabsTrigger>
             <TabsTrigger value="wallet">کیف پول</TabsTrigger>
             <TabsTrigger value="trading">معاملات</TabsTrigger>
             <TabsTrigger value="staking">استیکینگ</TabsTrigger>
