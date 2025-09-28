@@ -23,7 +23,7 @@ class WallexService:
     def __init__(self):
         self.session: Optional[aiohttp.ClientSession] = None
         self.websocket: Optional[websockets.WebSocketServerProtocol] = None
-        self.cache_duration = timedelta(minutes=1)
+        self.cache_duration = timedelta(minutes=30)  # Changed to 30 minutes as requested
         self.markets_cache = {}
         self.prices_cache = {}
         self.last_update = None
