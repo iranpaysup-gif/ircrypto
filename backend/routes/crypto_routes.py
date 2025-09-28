@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Query
 from typing import List, Optional
 
 from models import CryptoCurrency, TradingPair, ChartData, ApiResponse
-from crypto_service import get_crypto_service
+from wallex_service import get_wallex_service
 
 router = APIRouter(prefix="/crypto", tags=["cryptocurrency"])
 
