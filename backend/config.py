@@ -4,7 +4,8 @@ Configuration settings for the Iranian cryptocurrency exchange backend
 
 import os
 from typing import Optional
-from pydantic import BaseSettings, Field
+from pydantic import Field
+from pydantic_settings import BaseSettings
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
