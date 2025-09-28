@@ -692,10 +692,23 @@ const UserDashboard = ({ user }) => {
           </TabsContent>
         </Tabs>
         
-        {/* Deposit Modal */}
+        {/* Modals */}
         <DepositModal 
           isOpen={showDepositModal} 
           onClose={() => setShowDepositModal(false)} 
+        />
+        
+        <KYCModal 
+          isOpen={showKYCModal} 
+          onClose={() => setShowKYCModal(false)}
+          currentUser={user}
+          onKYCUpdate={handleKYCComplete}
+        />
+        
+        <CardToCardPayment 
+          isOpen={showCardToCardModal} 
+          onClose={() => setShowCardToCardModal(false)}
+          onPaymentSubmit={handlePaymentSuccess}
         />
       </div>
     </div>
