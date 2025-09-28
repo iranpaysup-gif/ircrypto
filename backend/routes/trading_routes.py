@@ -2,16 +2,16 @@ from fastapi import APIRouter, HTTPException, Depends, Query
 from typing import List, Optional
 from datetime import datetime, timedelta
 
-from ..models import (
+from models import (
     OrderCreate, Order, OrderResponse, OrderStatus, OrderSide,
     Transaction, TransactionType, TransactionStatus, ApiResponse
 )
-from ..auth import get_current_user
-from ..database import (
+from auth import get_current_user
+from database import (
     insert_document, find_documents, find_document, 
     update_document, delete_document
 )
-from ..crypto_service import get_crypto_service
+from crypto_service import get_crypto_service
 
 router = APIRouter(prefix="/trading", tags=["trading"])
 
