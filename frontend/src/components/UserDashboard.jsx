@@ -57,6 +57,74 @@ const UserDashboard = ({ user }) => {
     return currentIndex < userLevels.length - 1 ? userLevels[currentIndex + 1] : null;
   };
 
+  useEffect(() => {
+    fetchKYCStatus();
+    fetchWalletBalance();
+  }, []);
+
+  const fetchKYCStatus = async () => {
+    try {
+      const response = await kycAPI.getStatus();
+      setKycStatus(response.data);
+    } catch (error) {
+      console.error('Error fetching KYC status:', error);
+    }
+  };
+
+  const fetchWalletBalance = async () => {
+    try {
+      const response = await walletAPI.getBalance();
+      setWalletBalance(response.data.balance || { TMN: 0, USD: 0 });
+    } catch (error) {
+      console.error('Error fetching wallet balance:', error);
+    }
+  };
+
+  const handleKYCComplete = () => {
+    setShowKYCModal(false);
+    fetchKYCStatus();
+    toast({
+      title: 'احراز هویت تکمیل شد',
+      description: 'اکنون می‌توانید از تمام امکانات استفاده کنید',
+      variant: 'default'
+    });
+  };
+
+  const handleDepositClick = () => {
+    if (kycStatus.level === 0 || kycStatus.status === 'pending') {
+      toast({
+        title: 'احراز هویت لازم است',
+        description: 'برای واریز ابتدا احراز هویت خود را تکمیل کنید',
+        variant: 'destructive'
+      });
+      setShowKYCModal(true);
+      return;
+    }
+    setShowCardToCardModal(true);
+  };
+
+  const handlePaymentSuccess = (paymentData) => {
+    fetchWalletBalance();
+    toast({
+      title: 'درخواست واریز ثبت شد',
+      description: 'درخواست شما در انتظار تایید ادمین است',
+      variant: 'default'
+    });
+  };
+
+  const getKYCStatusBadge = () => {
+    switch (kycStatus.status) {
+      case 'approved':
+        return <Badge className="bg-green-100 text-green-800"><CheckCircle className="h-3 w-3 ml-1" />تایید شده</Badge>;
+      case 'pending':
+        return <Badge className="bg-yellow-100 text-yellow-800"><Clock className="h-3 w-3 ml-1" />در انتظار بررسی</Badge>;
+      case 'rejected':
+        return <Badge className="bg-red-100 text-red-800"><AlertCircle className="h-3 w-3 ml-1" />رد شده</Badge>;
+      default:
+        return <Badge className="bg-gray-100 text-gray-800"><AlertCircle className="h-3 w-3 ml-1" />تکمیل نشده</Badge>;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
