@@ -134,6 +134,7 @@ function App() {
           currentUser={currentUser}
           onLogin={handleLogin}
           onLogout={handleLogout}
+          onKYCClick={handleKYCClick}
         />
         
         <Routes>
