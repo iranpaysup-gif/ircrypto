@@ -23,7 +23,7 @@ async def place_order(
     """Place a new trading order"""
     try:
         # Validate trading pair
-        service = await get_crypto_service()
+        service = await get_wallex_service()
         pairs = await service.get_trading_pairs()
         valid_pairs = [pair.pair for pair in pairs]
         
