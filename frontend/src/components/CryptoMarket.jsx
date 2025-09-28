@@ -219,7 +219,7 @@ const CryptoMarket = ({ onCoinSelect }) => {
                           <Star className={`h-4 w-4 ${favorites.has(coin.id) ? 'fill-current' : ''}`} />
                         </button>
                         <img 
-                          src={coin.logo} 
+                          src={coin.logo_url} 
                           alt={coin.symbol} 
                           className="w-8 h-8 rounded-full"
                           onError={(e) => {
