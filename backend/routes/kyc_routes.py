@@ -4,9 +4,9 @@ from datetime import datetime
 import uuid
 import os
 
-from ..models import ApiResponse, UserLevel
-from ..auth import get_current_user
-from ..database import (
+from models import ApiResponse, UserLevel
+from auth import get_current_user
+from database import (
     insert_document, find_documents, find_document, 
     update_document
 )
