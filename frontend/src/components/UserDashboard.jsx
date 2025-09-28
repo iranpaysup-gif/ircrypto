@@ -530,7 +530,7 @@ const UserDashboard = ({ user }) => {
                     <div className="grid gap-3">
                       <Button 
                         className="bg-green-600 hover:bg-green-700 text-white"
-                        onClick={() => setShowDepositModal(true)}
+                        onClick={handleDepositClick}
                       >
                         واریز
                       </Button>
