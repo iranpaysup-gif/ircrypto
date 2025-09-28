@@ -127,23 +127,46 @@ const AuthModal = ({ isOpen, onClose, onSuccess }) => {
 
     setIsLoading(true);
     try {
-      await authAPI.verifyPhone({
-        phone: formData.phone,
-        code: formData.verificationCode
-      });
+      // Use SMS OTP API for verification
+      const verificationResponse = await smsAPI.verifyOTP(
+        formData.phone, 
+        formData.verificationCode
+      );
       
-      // Now log in the user
-      const loginResponse = await authAPI.login({
-        phone: formData.phone,
-        password: formData.password
+      if (verificationResponse.data.success) {
+        // Now log in the user
+        const loginResponse = await authAPI.login({
+          phone: formData.phone,
+          password: formData.password
+        });
+        
+        toast({
+          title: 'تأیید موفق',
+          description: 'حساب کاربری شما با موفقیت فعال شد',
+        });
+        
+        onSuccess(loginResponse.data);
+      }
+    } catch (error) {
+      toast({
+        title: 'خطا',
+        description: handleApiError(error),
+        variant: 'destructive'
       });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResendOTP = async () => {
+    try {
+      setIsLoading(true);
+      await smsAPI.sendOTP(formData.phone, 'registration');
       
       toast({
-        title: 'تأیید موفق',
-        description: 'حساب کاربری شما با موفقیت فعال شد',
+        title: 'کد ارسال شد',
+        description: 'کد تأیید جدید به شماره موبایل شما ارسال شد',
       });
-      
-      onSuccess(loginResponse.data);
     } catch (error) {
       toast({
         title: 'خطا',
