@@ -88,8 +88,8 @@ async def startup_event():
     # Connect to MongoDB
     await connect_to_mongo()
     
-    # Start background task for crypto price updates
-    crypto_update_task = asyncio.create_task(update_crypto_prices_task())
+    # Start background task for Wallex price updates
+    crypto_update_task = asyncio.create_task(update_wallex_prices_task())
     
     logger.info("Application startup complete!")
 
