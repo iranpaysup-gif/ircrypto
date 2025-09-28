@@ -23,6 +23,7 @@ import {
 const UserDashboard = ({ user }) => {
   const [showBalance, setShowBalance] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
+  const [showDepositModal, setShowDepositModal] = useState(false);
 
   const formatNumber = (num) => {
     return new Intl.NumberFormat('fa-IR').format(num);
