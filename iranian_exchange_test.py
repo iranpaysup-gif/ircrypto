@@ -63,7 +63,7 @@ class IranianExchangeTester:
         print(f"{status} {test_name}: {message}")
         
     def make_request(self, method: str, endpoint: str, data: Optional[Dict] = None, 
-                    files: Optional[Dict] = None, headers: Optional[Dict] = None) -> requests.Response:
+                    files: Optional[Dict] = None, headers: Optional[Dict] = None, params: Optional[Dict] = None) -> requests.Response:
         """Make HTTP request with proper headers"""
         url = f"{self.base_url}{endpoint}"
         request_headers = {"Content-Type": "application/json"}
@@ -83,9 +83,9 @@ class IranianExchangeTester:
                 response = self.session.get(url, headers=request_headers, params=data)
             elif method.upper() == "POST":
                 if files:
-                    response = self.session.post(url, headers=request_headers, files=files, data=data)
+                    response = self.session.post(url, headers=request_headers, files=files, data=data, params=params)
                 else:
-                    response = self.session.post(url, headers=request_headers, json=data)
+                    response = self.session.post(url, headers=request_headers, json=data, params=params)
             elif method.upper() == "DELETE":
                 response = self.session.delete(url, headers=request_headers)
             else:
