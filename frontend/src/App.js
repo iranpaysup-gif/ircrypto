@@ -18,6 +18,7 @@ function App() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [selectedCoin, setSelectedCoin] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showKYCModal, setShowKYCModal] = useState(false);
 
   useEffect(() => {
     initializeAuth();
