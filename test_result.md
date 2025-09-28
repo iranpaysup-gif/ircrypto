@@ -300,6 +300,18 @@ backend:
         agent: "testing"
         comment: "KYC document endpoints working. Can retrieve uploaded documents list. Document upload system implemented with proper validation."
 
+  - task: "Iranian Exchange User Journey"
+    implemented: true
+    working: true
+    file: "routes/kyc_routes.py, routes/wallet_routes.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Complete Iranian cryptocurrency exchange user journey tested successfully (100% pass rate). All key endpoints working: KYC system with Iranian documents (کارت ملی, سلفی), card-to-card deposit system with TMN currency, wallet balance tracking, and transaction history. Persian language support, Iranian banking integration, and level-based limits all functional. Admin approval workflow implemented but admin interface not yet available (expected for MVP). System ready for Iranian users."
+
 frontend:
   - task: "Frontend Integration"
     implemented: false
