@@ -9,6 +9,7 @@ import AuthModal from './components/AuthModal';
 import UserDashboard from './components/UserDashboard';
 import Footer from './components/Footer';
 import { toast } from './hooks/use-toast';
+import { authAPI, handleApiError, isTokenValid } from './services/api';
 import './App.css';
 
 function App() {
@@ -16,41 +17,65 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [selectedCoin, setSelectedCoin] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in from localStorage
+    initializeAuth();
+  }, []);
+
+  const initializeAuth = async () => {
+    const token = localStorage.getItem('wallex_token');
     const savedUser = localStorage.getItem('wallex_user');
-    if (savedUser) {
+    
+    if (token && savedUser && isTokenValid()) {
       try {
-        const user = JSON.parse(savedUser);
-        setCurrentUser(user);
+        // Verify token with backend
+        const response = await authAPI.getMe();
+        setCurrentUser(response.data);
         setIsAuthenticated(true);
       } catch (error) {
-        console.error('Error parsing saved user:', error);
+        console.error('Token validation failed:', error);
+        localStorage.removeItem('wallex_token');
         localStorage.removeItem('wallex_user');
       }
     }
-  }, []);
+    
+    setIsLoading(false);
+  };
 
   const handleLogin = () => {
     setShowAuthModal(true);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await authAPI.logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+    
     setIsAuthenticated(false);
     setCurrentUser(null);
+    localStorage.removeItem('wallex_token');
     localStorage.removeItem('wallex_user');
+    
     toast({
       title: 'خروج موفق',
       description: 'با موفقیت از حساب کاربری خود خارج شدید',
     });
   };
 
-  const handleAuthSuccess = (user) => {
+  const handleAuthSuccess = (tokenResponse) => {
+    const { access_token, user } = tokenResponse;
+    
+    // Store token and user data
+    localStorage.setItem('wallex_token', access_token);
+    localStorage.setItem('wallex_user', JSON.stringify(user));
+    
     setCurrentUser(user);
     setIsAuthenticated(true);
     setShowAuthModal(false);
-    localStorage.setItem('wallex_user', JSON.stringify(user));
+    
     toast({
       title: 'ورود موفق',
       description: `خوش آمدید ${user.name}!`,
@@ -58,17 +83,39 @@ function App() {
   };
 
   const handlePhoneSubmit = async (phoneNumber) => {
-    // Mock phone verification
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ success: true });
-      }, 1000);
-    });
+    try {
+      // This will trigger SMS sending in register flow
+      toast({
+        title: 'کد تأیید ارسال شد',
+        description: 'کد تأیید به شماره موبایل شما ارسال شد',
+      });
+      return { success: true };
+    } catch (error) {
+      toast({
+        title: 'خطا',
+        description: handleApiError(error),
+        variant: 'destructive'
+      });
+      throw error;
+    }
   };
 
   const handleCoinSelect = (coin) => {
     setSelectedCoin(coin);
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-gradient-to-r from-green-400 to-blue-500 rounded-lg flex items-center justify-center mx-auto mb-4 animate-pulse">
+            <div className="w-8 h-8 bg-white transform rotate-45"></div>
+          </div>
+          <p className="text-gray-600">در حال بارگذاری...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="App min-h-screen bg-gray-50">
