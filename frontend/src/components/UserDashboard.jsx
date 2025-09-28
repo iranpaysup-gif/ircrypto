@@ -176,19 +176,30 @@ const UserDashboard = ({ user }) => {
                   <CardContent>
                     <div className="text-center py-8">
                       <div className="text-4xl font-bold text-gray-900 mb-2">
-                        {showBalance ? formatCurrency(user.balance.IRR) : '••••••'}
+                        {showBalance ? formatNumber(walletBalance.TMN) + ' تومان' : '••••••'}
                       </div>
                       <div className="text-lg text-green-600">
-                        ≈ {showBalance ? formatCurrency(user.balance.USD, 'USD') : '•••'}
+                        ≈ {showBalance ? '$' + formatNumber(walletBalance.USD) : '•••'}
                       </div>
+                      {kycStatus.status !== 'approved' && (
+                        <div className="mt-4 p-3 bg-yellow-50 rounded-lg">
+                          <div className="flex items-center justify-center text-yellow-800">
+                            <AlertCircle className="h-4 w-4 ml-2" />
+                            <span className="text-sm">برای واریز و برداشت، احراز هویت را تکمیل کنید</span>
+                          </div>
+                        </div>
+                      )}
                       <div className="flex justify-center space-x-4 space-x-reverse mt-6">
                         <Button 
                           className="bg-green-600 hover:bg-green-700 text-white"
-                          onClick={() => setShowDepositModal(true)}
+                          onClick={handleDepositClick}
                         >
                           واریز
                         </Button>
-                        <Button variant="outline">
+                        <Button 
+                          variant="outline"
+                          disabled={kycStatus.status !== 'approved'}
+                        >
                           برداشت
                         </Button>
                       </div>
